@@ -1,21 +1,82 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import chatbot
+from app.routers import chatbot, analytics, feedback
+from dotenv import load_dotenv
+import os
 
-app = FastAPI(title="StreamSmart")
+# Load environment variables
+load_dotenv()
 
-# ✅ Add CORS middleware immediately after creating the app
+app = FastAPI(
+    title="StreamSmart API",
+    description="AI-Powered OTT Content Recommendation Chatbot",
+    version="1.0.0"
+)
+
+# Configure CORS
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # frontend dev server
+    allow_origins=[frontend_url, "http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Routers
+# Include routers
 app.include_router(chatbot.router)
+app.include_router(analytics.router)
+app.include_router(feedback.router)
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to StreamSmart!"}
+    return {
+        "message": "Welcome to StreamSmart API!",
+        "version": "1.0.0",
+        "description": "AI-Powered OTT Content Recommendation Chatbot",
+        "endpoints": {
+            "chat": "/api/chat",
+            "history": "/api/history",
+            "analytics": "/api/analytics",
+            "feedback": "/api/feedback",
+            "docs": "/docs"
+        },
+        "features": [
+            "Mood-based recommendations",
+            "Personalized suggestions",
+            "Watch history tracking",
+            "User insights & analytics",
+            "Feedback system"
+        ]
+    }
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "version": "1.0.0"}
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize data files on startup"""
+    import os
+    import json
+    
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    data_dir = os.path.join(base_dir, "data")
+    
+    # Ensure data directory exists
+    os.makedirs(data_dir, exist_ok=True)
+    
+    # Initialize data files if they don't exist
+    files_to_init = {
+        "conversations.json": {},
+        "feedback.json": {"show_ratings": [], "recommendation_feedback": []}
+    }
+    
+    for filename, initial_data in files_to_init.items():
+        filepath = os.path.join(data_dir, filename)
+        if not os.path.exists(filepath):
+            with open(filepath, "w") as f:
+                json.dump(initial_data, f, indent=2)
+            print(f"✅ Initialized {filename}")
+    
+    print("🚀 StreamSmart API is ready!")
