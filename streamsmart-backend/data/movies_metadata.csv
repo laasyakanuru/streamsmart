@@ -1,0 +1,201 @@
+movie_id,title,genre,release_year,duration,rating,tags
+1,Movie 1,Thriller,1995,163,5.5,epic
+2,Movie 2,Thriller,2016,159,1.3,dark humor
+3,Movie 3,Action,2022,91,5.2,adventure
+4,Movie 4,Fantasy,2000,145,7.7,adventure
+5,Movie 5,Action,2008,95,1.8,mystery
+6,Movie 6,Action,2019,156,3.1,family
+7,Movie 7,Horror,2002,139,5.8,dark humor
+8,Movie 8,Sci-Fi,2009,160,2.5,romantic
+9,Movie 9,Action,1980,155,3.0,epic
+10,Movie 10,Horror,1991,129,7.5,romantic
+11,Movie 11,Drama,2016,139,8.8,dark humor
+12,Movie 12,Horror,1989,95,2.4,futuristic
+13,Movie 13,Romance,2023,112,3.2,adventure
+14,Movie 14,Comedy,2014,142,4.7,romantic
+15,Movie 15,Sci-Fi,2005,166,2.2,romantic
+16,Movie 16,Thriller,1980,137,7.6,mystery
+17,Movie 17,Drama,1994,117,1.6,dark humor
+18,Movie 18,Horror,2017,164,3.9,satire
+19,Movie 19,Sci-Fi,2001,174,3.7,epic
+20,Movie 20,Thriller,2007,175,2.4,epic
+21,Movie 21,Thriller,1992,143,9.7,adventure
+22,Movie 22,Action,2011,99,5.8,family
+23,Movie 23,Comedy,2022,121,6.6,adventure
+24,Movie 24,Thriller,1980,151,1.6,mystery
+25,Movie 25,Action,2019,98,1.8,satire
+26,Movie 26,Romance,2011,101,4.5,adventure
+27,Movie 27,Action,2006,96,6.4,epic
+28,Movie 28,Thriller,2024,158,2.5,adventure
+29,Movie 29,Comedy,1990,101,2.0,futuristic
+30,Movie 30,Action,2024,112,5.0,satire
+31,Movie 31,Fantasy,2025,122,9.6,family
+32,Movie 32,Drama,1983,141,6.7,family
+33,Movie 33,Romance,2017,97,2.9,epic
+34,Movie 34,Sci-Fi,1995,124,5.0,dark humor
+35,Movie 35,Thriller,2014,109,2.1,epic
+36,Movie 36,Horror,2005,108,5.3,futuristic
+37,Movie 37,Horror,2021,135,1.5,satire
+38,Movie 38,Horror,1985,171,7.8,romantic
+39,Movie 39,Romance,1990,98,6.1,satire
+40,Movie 40,Thriller,1986,165,5.0,satire
+41,Movie 41,Drama,1995,132,7.8,satire
+42,Movie 42,Fantasy,2009,140,8.9,romantic
+43,Movie 43,Thriller,2022,117,2.9,futuristic
+44,Movie 44,Horror,2021,115,6.1,romantic
+45,Movie 45,Drama,2002,137,2.6,mystery
+46,Movie 46,Drama,1984,169,8.3,satire
+47,Movie 47,Romance,2021,169,1.4,romantic
+48,Movie 48,Fantasy,2011,108,8.6,satire
+49,Movie 49,Thriller,2024,101,5.6,dark humor
+50,Movie 50,Romance,1980,154,6.3,dark humor
+51,Movie 51,Romance,1997,124,5.1,dark humor
+52,Movie 52,Comedy,2021,131,3.4,futuristic
+53,Movie 53,Romance,2003,135,3.5,satire
+54,Movie 54,Horror,2010,113,9.8,epic
+55,Movie 55,Action,1986,99,5.7,epic
+56,Movie 56,Sci-Fi,1985,159,3.3,adventure
+57,Movie 57,Drama,1990,94,9.3,satire
+58,Movie 58,Thriller,1989,139,9.6,futuristic
+59,Movie 59,Fantasy,2020,143,1.0,futuristic
+60,Movie 60,Action,1992,157,5.1,satire
+61,Movie 61,Fantasy,2004,125,2.2,epic
+62,Movie 62,Comedy,2020,137,4.9,dark humor
+63,Movie 63,Action,1990,140,8.2,dark humor
+64,Movie 64,Comedy,1983,126,6.9,satire
+65,Movie 65,Thriller,1984,173,8.7,futuristic
+66,Movie 66,Action,1999,161,1.3,epic
+67,Movie 67,Thriller,2009,115,4.5,dark humor
+68,Movie 68,Sci-Fi,2008,115,7.4,dark humor
+69,Movie 69,Horror,2024,163,8.2,futuristic
+70,Movie 70,Drama,1997,98,4.7,epic
+71,Movie 71,Thriller,1997,133,1.2,romantic
+72,Movie 72,Thriller,2022,119,2.5,adventure
+73,Movie 73,Action,2003,154,2.8,mystery
+74,Movie 74,Sci-Fi,2008,101,4.4,mystery
+75,Movie 75,Comedy,1995,102,9.0,romantic
+76,Movie 76,Horror,2022,120,1.3,epic
+77,Movie 77,Action,2009,137,7.9,futuristic
+78,Movie 78,Romance,1990,167,1.6,mystery
+79,Movie 79,Romance,1981,101,7.3,dark humor
+80,Movie 80,Action,2007,109,8.0,futuristic
+81,Movie 81,Comedy,2012,176,2.6,adventure
+82,Movie 82,Thriller,1997,106,3.1,mystery
+83,Movie 83,Thriller,2024,92,7.6,adventure
+84,Movie 84,Thriller,2011,166,3.8,mystery
+85,Movie 85,Romance,2001,172,7.3,dark humor
+86,Movie 86,Fantasy,1998,140,1.2,epic
+87,Movie 87,Horror,2021,152,7.7,family
+88,Movie 88,Thriller,1993,128,2.8,adventure
+89,Movie 89,Comedy,2011,124,6.9,romantic
+90,Movie 90,Comedy,2013,178,3.6,satire
+91,Movie 91,Sci-Fi,1996,137,5.0,romantic
+92,Movie 92,Sci-Fi,2012,93,7.2,epic
+93,Movie 93,Romance,1995,161,1.8,adventure
+94,Movie 94,Romance,1987,93,9.2,futuristic
+95,Movie 95,Thriller,2016,132,8.7,dark humor
+96,Movie 96,Drama,1982,148,4.9,mystery
+97,Movie 97,Romance,2007,107,2.7,epic
+98,Movie 98,Fantasy,2014,134,1.7,satire
+99,Movie 99,Fantasy,1990,117,6.8,satire
+100,Movie 100,Fantasy,1992,144,7.9,adventure
+101,Movie 101,Sci-Fi,1993,144,2.9,dark humor
+102,Movie 102,Thriller,2001,98,2.2,romantic
+103,Movie 103,Sci-Fi,1992,94,8.0,romantic
+104,Movie 104,Comedy,2015,132,3.1,satire
+105,Movie 105,Romance,2019,174,5.4,romantic
+106,Movie 106,Horror,1985,177,6.7,family
+107,Movie 107,Drama,1992,148,8.2,futuristic
+108,Movie 108,Drama,2016,167,6.7,family
+109,Movie 109,Thriller,1985,129,5.0,dark humor
+110,Movie 110,Thriller,2003,176,6.1,family
+111,Movie 111,Sci-Fi,1986,144,2.3,futuristic
+112,Movie 112,Comedy,2018,120,2.5,dark humor
+113,Movie 113,Romance,2013,98,5.1,futuristic
+114,Movie 114,Sci-Fi,1980,95,3.1,epic
+115,Movie 115,Comedy,1989,132,3.9,dark humor
+116,Movie 116,Action,1988,132,9.6,romantic
+117,Movie 117,Action,2007,169,7.7,adventure
+118,Movie 118,Romance,1980,104,7.1,futuristic
+119,Movie 119,Horror,2001,114,3.7,satire
+120,Movie 120,Sci-Fi,1981,103,9.1,dark humor
+121,Movie 121,Drama,1989,116,3.7,satire
+122,Movie 122,Comedy,2020,125,6.1,adventure
+123,Movie 123,Thriller,2019,121,2.9,mystery
+124,Movie 124,Sci-Fi,1990,149,5.7,mystery
+125,Movie 125,Comedy,2013,139,8.3,epic
+126,Movie 126,Fantasy,2009,147,7.0,epic
+127,Movie 127,Romance,1994,165,2.9,romantic
+128,Movie 128,Romance,1996,104,5.3,mystery
+129,Movie 129,Fantasy,2000,133,5.8,family
+130,Movie 130,Thriller,1981,139,7.4,mystery
+131,Movie 131,Fantasy,2007,160,5.1,futuristic
+132,Movie 132,Drama,2018,142,9.2,mystery
+133,Movie 133,Drama,1982,99,7.9,satire
+134,Movie 134,Sci-Fi,1982,116,9.0,romantic
+135,Movie 135,Thriller,2005,102,3.1,futuristic
+136,Movie 136,Horror,2022,162,3.4,family
+137,Movie 137,Thriller,2019,127,5.1,dark humor
+138,Movie 138,Horror,1989,111,4.6,mystery
+139,Movie 139,Comedy,2019,156,9.7,mystery
+140,Movie 140,Action,1991,128,3.4,romantic
+141,Movie 141,Drama,1985,163,5.6,futuristic
+142,Movie 142,Action,2010,97,4.1,mystery
+143,Movie 143,Horror,2017,107,3.8,satire
+144,Movie 144,Drama,2020,144,3.7,futuristic
+145,Movie 145,Action,2013,135,1.5,epic
+146,Movie 146,Action,2021,95,3.5,romantic
+147,Movie 147,Sci-Fi,1986,180,4.0,romantic
+148,Movie 148,Drama,2008,175,2.5,epic
+149,Movie 149,Sci-Fi,1981,122,2.0,epic
+150,Movie 150,Action,2016,144,9.8,adventure
+151,Movie 151,Sci-Fi,1982,148,4.2,family
+152,Movie 152,Drama,2023,154,5.5,dark humor
+153,Movie 153,Fantasy,2004,171,9.5,adventure
+154,Movie 154,Comedy,1994,164,6.0,family
+155,Movie 155,Horror,2005,92,4.0,mystery
+156,Movie 156,Action,2001,98,10.0,mystery
+157,Movie 157,Comedy,2010,173,6.3,dark humor
+158,Movie 158,Comedy,2016,154,1.6,mystery
+159,Movie 159,Fantasy,2020,149,7.6,mystery
+160,Movie 160,Horror,2007,93,1.4,satire
+161,Movie 161,Drama,2019,177,9.5,adventure
+162,Movie 162,Action,1989,177,3.2,family
+163,Movie 163,Drama,1994,166,3.0,romantic
+164,Movie 164,Fantasy,2014,123,6.5,family
+165,Movie 165,Action,1998,160,5.8,satire
+166,Movie 166,Romance,2011,128,5.8,dark humor
+167,Movie 167,Sci-Fi,2008,142,6.6,futuristic
+168,Movie 168,Romance,1980,129,3.3,adventure
+169,Movie 169,Romance,1994,145,4.9,mystery
+170,Movie 170,Drama,1997,109,3.5,romantic
+171,Movie 171,Drama,2005,177,1.6,satire
+172,Movie 172,Fantasy,1980,144,2.8,mystery
+173,Movie 173,Drama,1999,108,3.4,family
+174,Movie 174,Fantasy,1982,160,1.9,satire
+175,Movie 175,Comedy,2011,131,4.1,epic
+176,Movie 176,Action,2000,132,2.3,epic
+177,Movie 177,Fantasy,2004,92,7.9,romantic
+178,Movie 178,Drama,1990,138,8.6,adventure
+179,Movie 179,Romance,1986,97,2.8,futuristic
+180,Movie 180,Fantasy,2002,96,6.7,epic
+181,Movie 181,Fantasy,1992,141,1.3,romantic
+182,Movie 182,Fantasy,1996,108,3.6,satire
+183,Movie 183,Fantasy,1998,134,5.3,family
+184,Movie 184,Horror,1988,168,5.0,dark humor
+185,Movie 185,Romance,2023,124,5.1,satire
+186,Movie 186,Romance,2022,97,3.4,satire
+187,Movie 187,Comedy,2010,143,1.6,satire
+188,Movie 188,Sci-Fi,1982,180,3.1,dark humor
+189,Movie 189,Action,2014,152,5.5,epic
+190,Movie 190,Fantasy,2020,106,2.1,mystery
+191,Movie 191,Fantasy,2025,106,8.1,mystery
+192,Movie 192,Comedy,2016,124,4.5,mystery
+193,Movie 193,Romance,1980,178,3.3,family
+194,Movie 194,Comedy,2001,100,8.1,family
+195,Movie 195,Comedy,2013,173,8.7,satire
+196,Movie 196,Horror,2014,142,6.8,futuristic
+197,Movie 197,Drama,2016,170,8.3,dark humor
+198,Movie 198,Comedy,2001,104,9.3,satire
+199,Movie 199,Comedy,2001,165,3.6,adventure
+200,Movie 200,Fantasy,1999,123,4.4,mystery
