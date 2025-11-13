@@ -1,128 +1,367 @@
-# 🚀 StreamSmart - Quick Start
+# 🚀 StreamSmart - Quick Start Guide
 
-## Deploy to Azure in 3 Commands
+## ⚡ One-Command Launch
+
+To start the app every time:
 
 ```bash
-# 1. Go to project directory
+cd /Users/gjvs/Documents/streamsmart
+./start.sh
+```
+
+**That's it!** 🎉 The browser will automatically open to `http://localhost:5173`
+
+---
+
+## 📋 Essential Commands
+
+| Command | Description |
+|---------|-------------|
+| `./start.sh` | Start both backend and frontend |
+| `./stop.sh` | Stop all services |
+| `./restart.sh` | Restart everything |
+| `./status.sh` | Check if services are running |
+| `./logs.sh` | View application logs |
+
+---
+
+## 🎯 Step-by-Step Usage
+
+### 1️⃣ First Time Setup (One Time Only)
+
+```bash
+# Navigate to project
 cd /Users/gjvs/Documents/streamsmart
 
-# 2. Make sure you're logged into Azure
-az login
+# Install backend dependencies (if not done)
+cd streamsmart-backend
+uv pip install -e .
+cd ..
 
-# 3. Deploy everything!
+# Install frontend dependencies (if not done)
+cd streamsmart-frontend
+npm install
+cd ..
+
+# Make scripts executable (if not done)
+chmod +x *.sh
+```
+
+### 2️⃣ Daily Usage (Every Time)
+
+```bash
+# Go to project directory
+cd /Users/gjvs/Documents/streamsmart
+
+# Start the app
+./start.sh
+```
+
+**Done!** Browser opens automatically to your app.
+
+---
+
+## 🔍 Check Status
+
+Want to see if everything is running?
+
+```bash
+./status.sh
+```
+
+**Output:**
+```
+📊 StreamSmart Status
+=====================
+
+✅ Backend:  RUNNING on http://localhost:8000
+   AI Mode:  Azure OpenAI (GPT-powered)
+
+✅ Frontend: RUNNING on http://localhost:5173
+```
+
+---
+
+## 📊 View Logs
+
+If something isn't working:
+
+```bash
+./logs.sh
+```
+
+Choose what to view:
+1. Backend logs (errors, API calls)
+2. Frontend logs (UI issues)
+3. Both logs
+4. Live backend logs (real-time)
+5. Live frontend logs (real-time)
+
+---
+
+## 🛑 Stop Everything
+
+When you're done:
+
+```bash
+./stop.sh
+```
+
+---
+
+## 🔄 Restart
+
+If something breaks:
+
+```bash
+./restart.sh
+```
+
+---
+
+## 🌐 URLs
+
+Once started, access these:
+
+- **Frontend (Your App)**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+
+---
+
+## 🧪 Quick Test
+
+After starting, test the app:
+
+### Test 1: Open Frontend
+```bash
+open http://localhost:5173
+```
+
+### Test 2: Type a Message
+In the chat box, type:
+```
+I am super happy and want to watch something light-hearted
+```
+
+### Test 3: Check Mood Detection
+The AI should respond with:
+- **Mood**: happy (not neutral!)
+- **Tone**: light
+- **Recommendations**: Comedy, feel-good shows
+
+---
+
+## 🐛 Troubleshooting
+
+### Problem: Backend won't start
+
+**Check:**
+```bash
+./status.sh
+```
+
+**If port 8000 is busy:**
+```bash
+lsof -i :8000
+kill -9 <PID>
+./start.sh
+```
+
+### Problem: Frontend won't start
+
+**Check:**
+```bash
+./status.sh
+```
+
+**If port 5173 is busy:**
+```bash
+lsof -i :5173
+kill -9 <PID>
+./start.sh
+```
+
+### Problem: "Module not found"
+
+**Backend:**
+```bash
+cd streamsmart-backend
+uv pip install -e .
+cd ..
+./restart.sh
+```
+
+**Frontend:**
+```bash
+cd streamsmart-frontend
+npm install
+cd ..
+./restart.sh
+```
+
+### Problem: Azure OpenAI not working
+
+**Set environment variables:**
+```bash
+# Edit .env file
+nano streamsmart-backend/.env
+
+# Add these lines:
+AZURE_OPENAI_ENDPOINT=https://your-endpoint.openai.azure.com
+AZURE_OPENAI_KEY=your-key-here
+AZURE_OPENAI_DEPLOYMENT=gpt-4o-mini
+
+# Restart
+./restart.sh
+```
+
+---
+
+## 📁 Folder Structure
+
+```
+streamsmart/
+├── start.sh          ← Start everything
+├── stop.sh           ← Stop everything
+├── restart.sh        ← Restart everything
+├── status.sh         ← Check status
+├── logs.sh           ← View logs
+├── logs/             ← Log files
+│   ├── backend.log
+│   └── frontend.log
+├── streamsmart-backend/   ← FastAPI backend
+└── streamsmart-frontend/  ← React frontend
+```
+
+---
+
+## ⚙️ Advanced Usage
+
+### Run Backend Only
+```bash
+cd streamsmart-backend
+uvicorn app.main:app --reload
+```
+
+### Run Frontend Only
+```bash
+cd streamsmart-frontend
+npm run dev
+```
+
+### Run in Production Mode
+```bash
+# Backend
+cd streamsmart-backend
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# Frontend (build first)
+cd streamsmart-frontend
+npm run build
+npm run preview
+```
+
+---
+
+## 🎬 Demo Workflow
+
+**For presentations:**
+
+1. **Before demo:**
+   ```bash
+   cd /Users/gjvs/Documents/streamsmart
+   ./start.sh
+   ```
+
+2. **Open browser** (auto-opens to http://localhost:5173)
+
+3. **Type in chat:**
+   - "I'm feeling super happy and energetic"
+   - "I want an intense thriller"
+   - "Show me relaxing nature documentaries"
+
+4. **Show AI features:**
+   - Point out mood detection
+   - Show personalized recommendations
+   - Highlight user analytics
+
+5. **After demo:**
+   ```bash
+   ./stop.sh
+   ```
+
+---
+
+## 🌐 Production Deployment
+
+To deploy to Azure:
+
+```bash
+cd /Users/gjvs/Documents/streamsmart
 ./scripts/deploy-now.sh
 ```
 
-That's it! The script will:
-- ✅ Build your Docker images in the cloud (no Docker needed locally!)
-- ✅ Deploy backend and frontend
-- ✅ Configure Azure OpenAI automatically
-- ✅ Set up CORS
-- ✅ Give you the URLs when done
-
-**Time:** 10-15 minutes
-**Cost:** ~$20/month (or delete after testing)
+**Production URLs:**
+- Frontend: https://streamsmart-frontend-7272.azurewebsites.net
+- Backend: https://streamsmart-backend-7272.azurewebsites.net
 
 ---
 
-## What You'll Get
+## 💡 Tips
 
-After deployment completes, you'll have:
-
-1. **Live Frontend** - Beautiful React chatbot UI
-2. **Live Backend** - FastAPI with Azure OpenAI
-3. **API Documentation** - Auto-generated Swagger docs
-4. **Azure OpenAI** - GPT-powered mood extraction
-
----
-
-## Testing Your Deployment
-
-Once deployed, test it:
-
+### Faster Startup
+Start backend first, then frontend:
 ```bash
-# Backend health check
-curl https://YOUR-BACKEND.azurewebsites.net/health
+cd streamsmart-backend && uvicorn app.main:app --reload &
+sleep 3
+cd ../streamsmart-frontend && npm run dev &
+```
 
-# Check AI status
-curl https://YOUR-BACKEND.azurewebsites.net/api/status
+### Auto-Restart on Code Changes
+- **Backend**: Already has `--reload` flag
+- **Frontend**: Vite auto-reloads on save
 
-# Try a recommendation
-curl -X POST https://YOUR-BACKEND.azurewebsites.net/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"user_id": "test", "message": "I want something thrilling!", "top_n": 3}'
+### View Real-Time Logs
+```bash
+# Terminal 1: Backend logs
+tail -f logs/backend.log
 
-# Open frontend
-open https://YOUR-FRONTEND.azurewebsites.net
+# Terminal 2: Frontend logs
+tail -f logs/frontend.log
 ```
 
 ---
 
-## Current Status
+## ✅ Daily Checklist
 
-✅ **All Systems Ready:**
-- Backend: 22/22 tests passing
-- Frontend: Fully functional
-- Azure OpenAI: Configured and active
-- Dockerfiles: Production-ready
-- Performance: <5s response time
+Every time you work on the project:
 
----
-
-## Troubleshooting
-
-**Issue:** Azure policy errors
-**Fix:** You're using the hackathon account which has restrictions. The `deploy-now.sh` script works around these automatically.
-
-**Issue:** App not responding immediately
-**Fix:** Wait 2-3 minutes after deployment - apps need time to start.
-
-**Issue:** Want to see what's happening
-**Fix:** Check the detailed guide: `DEPLOYMENT_GUIDE.md`
+- [ ] `cd /Users/gjvs/Documents/streamsmart`
+- [ ] `./start.sh`
+- [ ] Wait for browser to open (or open http://localhost:5173)
+- [ ] Test with a sample message
+- [ ] When done: `./stop.sh`
 
 ---
 
-## What's Next?
+## 🎉 You're Ready!
 
-After your app is live:
-
-1. ✅ Test all features
-2. 🎤 Add voice input (next planned feature)
-3. 📊 Set up monitoring
-4. 🔒 Add authentication (if needed)
-5. 📈 Scale as needed
-
----
-
-## Resources
-
-- **Full Deployment Guide:** `DEPLOYMENT_GUIDE.md`
-- **Test Script:** `./scripts/test-chatbot-comprehensive.sh`
-- **Local Development:** `./scripts/run-backend.sh` + `./scripts/run-frontend.sh`
-
----
-
-## Delete Everything (When Done)
-
+**To launch the app:**
 ```bash
-# List your resources
-az webapp list --resource-group hackathon-azure-rg193 --query "[].name" -o table
-
-# Delete individual apps
-az webapp delete --name YOUR-BACKEND --resource-group hackathon-azure-rg193
-az webapp delete --name YOUR-FRONTEND --resource-group hackathon-azure-rg193
-az acr delete --name YOUR-ACR --resource-group hackathon-azure-rg193
-az appservice plan delete --name streamsmart-plan --resource-group hackathon-azure-rg193
+cd /Users/gjvs/Documents/streamsmart && ./start.sh
 ```
 
+**That's all you need!** 🚀
+
 ---
 
-## Need Help?
+## 📞 Need Help?
 
-All details are in `DEPLOYMENT_GUIDE.md` including:
-- Step-by-step instructions
-- Troubleshooting guide
-- Monitoring commands
-- Cost optimization tips
+- **Check status**: `./status.sh`
+- **View logs**: `./logs.sh`
+- **Restart**: `./restart.sh`
+- **Read docs**: Open `README.md` or `STAGING_RELEASE.md`
 
-**Just run:** `./scripts/deploy-now.sh` and you're live! 🎉
+**Happy coding!** 🎬✨
