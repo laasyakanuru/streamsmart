@@ -1,39 +1,64 @@
-import { useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import Chatbot from "./Chatbot";
+import "./App.css";
+import "./Chatbot.css"; // for tooltip and launcher styles
 
 function App() {
-  const [mood, setMood] = useState("");
-  const [recommendation, setRecommendation] = useState("");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(true);
 
-  const getRecommendation = async () => {
-    try {
-      const res = await axios.post("http://127.0.0.1:8000/chatbot/recommend", {
-        mood: mood,
-        context: "alone",
-        time_of_day: "evening"
-      });
-      setRecommendation(res.data.recommendation);
-    } catch (err) {
-      console.error("Error calling backend:", err);
-    }
-  };
+  // hide tooltip after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setShowTooltip(false), 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
-    <div style={{ background: "black", color: "white", minHeight: "100vh", padding: "2rem" }}>
-      <h1>StreamSmart 🎬</h1>
-      <input
-        value={mood}
-        onChange={(e) => setMood(e.target.value)}
-        placeholder="What's your mood?"
-        style={{ padding: "0.5rem", marginRight: "0.5rem" }}
-      />
-      <button
-        onClick={getRecommendation}
-        style={{ padding: "0.5rem", background: "purple", color: "white" }}
-      >
-        Recommend
-      </button>
-      {recommendation && <p style={{ marginTop: "1rem" }}>{recommendation}</p>}
+    <div className="app-container">
+      {/* Nav Bar */}
+      <nav className="navbar">
+        <h1 className="logo">🎬 StreamSmart</h1>
+        <ul className="nav-links">
+          <li>Home</li>
+          <li>Movies</li>
+          <li>Series</li>
+          <li>My List</li>
+        </ul>
+      </nav>
+
+      {/* Movie Grid */}
+      <div className="movie-grid">
+        {Array.from({ length: 12 }).map((_, idx) => (
+          <div key={idx} className="movie-card">
+            <img src={`https://picsum.photos/200/300?random=${idx}`} alt="Movie Poster" />
+            <h3>Movie {idx + 1}</h3>
+            <p>Genre: Action</p>
+            <span>⭐ {Math.random().toFixed(1) * 10}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Floating Chat Button + Tooltip Popup */}
+      <div className="chat-launcher">
+        {showTooltip && (
+          <div className="chat-tooltip">
+            Don't know what to watch? StreamSmart can help!
+          </div>
+        )}
+        <button
+          className="chat-icon"
+          onClick={() => setIsChatOpen(!isChatOpen)}
+        >
+          💬
+        </button>
+      </div>
+
+      {/* Chatbot Overlay */}
+      {isChatOpen && (
+        <div className="chat-overlay">
+          <Chatbot onClose={() => setIsChatOpen(false)} />
+        </div>
+      )}
     </div>
   );
 }

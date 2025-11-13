@@ -1,0 +1,201 @@
+user_id,mood,context,time_of_day,recommended_movie_id
+1,adventurous,alone,late night,120
+2,adventurous,with friends,late night,63
+3,energetic,family,late night,8
+4,relaxed,date night,late night,57
+5,relaxed,family,late night,41
+6,happy,alone,afternoon,64
+7,sad,alone,evening,51
+8,romantic,family,late night,51
+9,bored,family,afternoon,43
+10,bored,alone,afternoon,16
+11,energetic,alone,late night,134
+12,romantic,alone,evening,50
+13,sad,date night,late night,179
+14,bored,date night,morning,71
+15,bored,family,afternoon,16
+16,adventurous,alone,afternoon,34
+17,adventurous,with friends,morning,150
+18,relaxed,date night,afternoon,159
+19,happy,date night,late night,125
+20,bored,family,late night,20
+21,romantic,date night,evening,169
+22,bored,with friends,morning,16
+23,sad,alone,late night,39
+24,romantic,family,morning,47
+25,adventurous,alone,evening,27
+26,romantic,family,afternoon,85
+27,happy,date night,afternoon,29
+28,adventurous,with friends,morning,117
+29,adventurous,date night,late night,156
+30,sad,family,late night,39
+31,sad,with friends,evening,93
+32,adventurous,family,evening,142
+33,sad,date night,morning,128
+34,relaxed,family,evening,170
+35,energetic,with friends,evening,165
+36,bored,alone,morning,21
+37,bored,date night,afternoon,88
+38,sad,alone,late night,51
+39,sad,date night,evening,166
+40,energetic,family,morning,9
+41,romantic,with friends,afternoon,78
+42,relaxed,with friends,late night,32
+43,sad,family,afternoon,185
+44,relaxed,date night,morning,141
+45,adventurous,with friends,morning,19
+46,happy,with friends,morning,115
+47,bored,family,late night,130
+48,energetic,family,morning,189
+49,bored,alone,late night,88
+50,romantic,with friends,evening,78
+51,romantic,with friends,evening,26
+52,relaxed,with friends,late night,17
+53,energetic,date night,late night,6
+54,relaxed,with friends,evening,133
+55,happy,alone,evening,104
+56,sad,family,evening,179
+57,romantic,family,evening,168
+58,energetic,date night,morning,63
+59,romantic,date night,late night,50
+60,relaxed,alone,late night,86
+61,sad,family,late night,113
+62,adventurous,alone,afternoon,114
+63,relaxed,date night,late night,48
+64,adventurous,with friends,afternoon,140
+65,romantic,date night,evening,113
+66,happy,with friends,morning,23
+67,romantic,with friends,evening,26
+68,adventurous,family,late night,189
+69,energetic,alone,evening,34
+70,energetic,alone,late night,66
+71,adventurous,alone,evening,142
+72,adventurous,date night,late night,68
+73,adventurous,alone,morning,103
+74,energetic,date night,late night,74
+75,adventurous,with friends,afternoon,9
+76,adventurous,family,afternoon,63
+77,bored,alone,afternoon,71
+78,sad,date night,afternoon,186
+79,relaxed,date night,evening,163
+80,sad,with friends,late night,118
+81,relaxed,family,late night,164
+82,romantic,alone,afternoon,193
+83,adventurous,alone,evening,8
+84,romantic,alone,late night,85
+85,sad,family,evening,128
+86,bored,alone,evening,82
+87,bored,alone,afternoon,49
+88,energetic,with friends,late night,60
+89,adventurous,date night,evening,142
+90,energetic,alone,evening,165
+91,sad,with friends,evening,169
+92,adventurous,alone,afternoon,6
+93,energetic,alone,evening,162
+94,sad,date night,late night,39
+95,adventurous,family,afternoon,68
+96,energetic,with friends,morning,156
+97,romantic,family,evening,193
+98,relaxed,with friends,evening,163
+99,energetic,with friends,evening,117
+100,sad,with friends,afternoon,85
+101,bored,family,evening,123
+102,bored,family,late night,16
+103,energetic,family,evening,150
+104,relaxed,family,morning,126
+105,adventurous,with friends,morning,147
+106,relaxed,family,morning,98
+107,bored,family,morning,35
+108,sad,alone,afternoon,127
+109,bored,family,afternoon,72
+110,sad,date night,afternoon,85
+111,romantic,alone,morning,168
+112,energetic,alone,late night,146
+113,happy,family,morning,157
+114,relaxed,date night,morning,141
+115,relaxed,family,late night,132
+116,bored,date night,late night,16
+117,romantic,family,late night,193
+118,relaxed,with friends,afternoon,131
+119,relaxed,date night,evening,59
+120,relaxed,family,morning,148
+121,bored,with friends,afternoon,2
+122,adventurous,date night,late night,68
+123,relaxed,alone,evening,170
+124,bored,date night,morning,82
+125,romantic,alone,evening,85
+126,sad,family,evening,128
+127,romantic,alone,afternoon,78
+128,happy,with friends,late night,125
+129,happy,family,late night,52
+130,energetic,with friends,evening,167
+131,happy,date night,afternoon,81
+132,bored,alone,evening,28
+133,sad,alone,evening,169
+134,sad,date night,evening,94
+135,adventurous,date night,evening,147
+136,sad,with friends,morning,193
+137,relaxed,with friends,afternoon,48
+138,adventurous,date night,late night,63
+139,happy,alone,evening,157
+140,adventurous,alone,late night,134
+141,happy,alone,late night,62
+142,bored,with friends,late night,88
+143,happy,family,afternoon,198
+144,relaxed,alone,afternoon,197
+145,romantic,date night,evening,105
+146,adventurous,with friends,late night,151
+147,adventurous,alone,late night,111
+148,romantic,family,afternoon,166
+149,romantic,family,evening,47
+150,relaxed,date night,evening,163
+151,sad,family,late night,13
+152,adventurous,date night,evening,151
+153,happy,date night,afternoon,194
+154,sad,date night,afternoon,97
+155,romantic,date night,late night,105
+156,happy,with friends,afternoon,195
+157,romantic,with friends,afternoon,26
+158,happy,date night,late night,139
+159,sad,family,late night,185
+160,bored,alone,afternoon,49
+161,sad,alone,morning,85
+162,sad,family,late night,185
+163,bored,date night,evening,43
+164,adventurous,date night,evening,146
+165,romantic,with friends,morning,94
+166,bored,date night,late night,43
+167,energetic,with friends,evening,165
+168,bored,family,late night,1
+169,sad,family,late night,193
+170,bored,family,late night,65
+171,happy,with friends,afternoon,187
+172,energetic,alone,afternoon,167
+173,sad,with friends,evening,185
+174,sad,date night,afternoon,78
+175,energetic,with friends,late night,27
+176,romantic,date night,morning,169
+177,adventurous,family,afternoon,25
+178,relaxed,alone,evening,48
+179,sad,family,morning,50
+180,sad,date night,late night,85
+181,bored,alone,morning,58
+182,energetic,alone,late night,56
+183,sad,family,morning,33
+184,relaxed,with friends,afternoon,170
+185,romantic,date night,evening,179
+186,romantic,family,morning,193
+187,bored,with friends,late night,110
+188,adventurous,family,afternoon,150
+189,adventurous,family,late night,34
+190,relaxed,alone,morning,178
+191,romantic,with friends,afternoon,169
+192,sad,family,late night,51
+193,energetic,alone,morning,22
+194,sad,with friends,evening,105
+195,adventurous,with friends,late night,165
+196,bored,date night,afternoon,58
+197,romantic,alone,morning,127
+198,romantic,date night,late night,193
+199,bored,alone,late night,110
+200,adventurous,with friends,late night,151
