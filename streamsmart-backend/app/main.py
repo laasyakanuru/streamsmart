@@ -18,7 +18,13 @@ app = FastAPI(
 frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_url, "http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[
+        frontend_url,
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://streamsmart-frontend-2091.azurewebsites.net",  # Azure frontend
+        "https://streamsmart-frontend-7272.azurewebsites.net"   # Old frontend (if any)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
