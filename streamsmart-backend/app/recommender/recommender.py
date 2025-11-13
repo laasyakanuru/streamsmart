@@ -97,25 +97,53 @@ movies_df = pd.read_csv(movies_path)
 moods_df = pd.read_csv(moods_path)
 users_df = pd.read_csv(users_path)
 # -----------------------------
-# Train RandomForest model
+# Load or Train RandomForest model
 # -----------------------------
-# Encode categorical features
-le_mood = LabelEncoder()
-le_context = LabelEncoder()
-le_time = LabelEncoder()
-le_movie = LabelEncoder()
-moods_df["mood_enc"] = le_mood.fit_transform(moods_df["mood"])
-moods_df["context_enc"] = le_context.fit_transform(moods_df["context"])
-moods_df["time_enc"] = le_time.fit_transform(moods_df["time_of_day"])
-moods_df["movie_enc"] = le_movie.fit_transform(moods_df["recommended_movie_id"])
-X = moods_df[["mood_enc", "context_enc", "time_enc"]]
-y = moods_df["movie_enc"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
-rf_model.fit(X_train, y_train)
-# Save model for reuse
 model_path = os.path.join(base_dir, "data", "rf_recommender.pkl")
-joblib.dump(rf_model, model_path)
+le_mood_path = os.path.join(base_dir, "data", "le_mood.pkl")
+le_context_path = os.path.join(base_dir, "data", "le_context.pkl")
+le_time_path = os.path.join(base_dir, "data", "le_time.pkl")
+le_movie_path = os.path.join(base_dir, "data", "le_movie.pkl")
+
+if os.path.exists(model_path) and os.path.exists(le_mood_path):
+    # Load existing model and encoders
+    print("✅ Loading existing Random Forest model...")
+    rf_model = joblib.load(model_path)
+    le_mood = joblib.load(le_mood_path)
+    le_context = joblib.load(le_context_path)
+    le_time = joblib.load(le_time_path)
+    le_movie = joblib.load(le_movie_path)
+    print("✅ Model loaded successfully!")
+else:
+    # Train new model
+    print("🔧 Training Random Forest model (first time)...")
+    le_mood = LabelEncoder()
+    le_context = LabelEncoder()
+    le_time = LabelEncoder()
+    le_movie = LabelEncoder()
+    
+    moods_df["mood_enc"] = le_mood.fit_transform(moods_df["mood"])
+    moods_df["context_enc"] = le_context.fit_transform(moods_df["context"])
+    moods_df["time_enc"] = le_time.fit_transform(moods_df["time_of_day"])
+    moods_df["movie_enc"] = le_movie.fit_transform(moods_df["recommended_movie_id"])
+    
+    X = moods_df[["mood_enc", "context_enc", "time_enc"]]
+    y = moods_df["movie_enc"]
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf_model.fit(X_train, y_train)
+    
+    # Save model and encoders for reuse
+    joblib.dump(rf_model, model_path)
+    joblib.dump(le_mood, le_mood_path)
+    joblib.dump(le_context, le_context_path)
+    joblib.dump(le_time, le_time_path)
+    joblib.dump(le_movie, le_movie_path)
+    
+    accuracy = rf_model.score(X_test, y_test)
+    print(f"✅ Model trained! Test Accuracy: {accuracy:.2%}")
 # -----------------------------
 # Embedding model (hybrid logic)
 # -----------------------------

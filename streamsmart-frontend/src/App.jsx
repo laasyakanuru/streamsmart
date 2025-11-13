@@ -122,10 +122,10 @@ function App() {
                             <span className="genre">{rec.genre}</span>
                             <span className="rating">⭐ {rec.rating}</span>
                           </div>
-                          <p className="description">{rec.description}</p>
+                          <p className="description">{rec.tags || "No description available"}</p>
                           <div className="rec-tags">
-                            <span className="tag">{rec.mood_tag}</span>
-                            <span className="tag">{rec.tone}</span>
+                            <span className="tag">📅 {rec.release_year}</span>
+                            <span className="tag">🎬 {rec.genre}</span>
                           </div>
                           <div className="match-score">
                             Match: {(rec.hybrid_score * 100).toFixed(0)}%
