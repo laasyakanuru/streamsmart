@@ -30,11 +30,18 @@ def extract_mood_with_azure_openai(prompt: str):
     try:
         from openai import AzureOpenAI
         
+        print(f"🔧 Azure OpenAI Config:")
+        print(f"   Endpoint: {AZURE_OPENAI_ENDPOINT}")
+        print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
+        print(f"   Key: {'*' * 20}...{AZURE_OPENAI_KEY[-4:] if AZURE_OPENAI_KEY else 'None'}")
+        
         client = AzureOpenAI(
             api_key=AZURE_OPENAI_KEY,
             api_version="2024-02-15-preview",
             azure_endpoint=AZURE_OPENAI_ENDPOINT
         )
+        
+        print(f"✅ Client created, making API call...")
         
         response = client.chat.completions.create(
             model=AZURE_OPENAI_DEPLOYMENT,
@@ -58,8 +65,13 @@ def extract_mood_with_azure_openai(prompt: str):
         return result
         
     except Exception as e:
-        print(f"⚠️  Azure OpenAI failed: {e}")
-        print("   Falling back to rule-based extraction")
+        import traceback
+        print(f"❌ Azure OpenAI FAILED!")
+        print(f"   Error Type: {type(e).__name__}")
+        print(f"   Error Message: {str(e)}")
+        print(f"   Traceback:")
+        traceback.print_exc()
+        print(f"⚠️  Falling back to rule-based extraction")
         return extract_mood_rule_based(prompt)
 
 def extract_mood_with_openai(prompt: str):
