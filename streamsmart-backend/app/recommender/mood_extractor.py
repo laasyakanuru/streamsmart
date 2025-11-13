@@ -1,31 +1,100 @@
 import os
 from textblob import TextBlob
+import json
 
-# Auto-detect if OpenAI API key is available
-USE_GPT = bool(os.getenv("OPENAI_API_KEY"))
+# Detect which AI service is available (priority order)
+AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
+AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
+AZURE_OPENAI_DEPLOYMENT = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4o-mini")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-def extract_mood_with_gpt(prompt: str):
-    # Lazy import pattern — don't initialize client unless needed
-    from openai import OpenAI
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Determine which mode to use
+if AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_KEY:
+    USE_MODE = "azure_openai"
+    print("✅ Using Azure OpenAI for mood extraction")
+elif OPENAI_API_KEY:
+    USE_MODE = "openai"
+    print("✅ Using OpenAI API for mood extraction")
+else:
+    USE_MODE = "rule_based"
+    print("ℹ️  Using rule-based mood extraction (no API key configured)")
+
+def get_active_mode():
+    """Return which mood extraction mode is active"""
+    return USE_MODE
+
+def extract_mood_with_azure_openai(prompt: str):
     """
-    Uses GPT model to extract user mood and tone from the input prompt.
-    Returns a dictionary: {"mood": "happy", "intent": "light-hearted"}
+    Uses Azure OpenAI GPT model to extract mood and tone
     """
     try:
+        from openai import AzureOpenAI
+        
+        client = AzureOpenAI(
+            api_key=AZURE_OPENAI_KEY,
+            api_version="2024-02-15-preview",
+            azure_endpoint=AZURE_OPENAI_ENDPOINT
+        )
+        
+        response = client.chat.completions.create(
+            model=AZURE_OPENAI_DEPLOYMENT,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are an assistant that identifies mood and tone from user prompts for a movie recommendation system."
+                },
+                {
+                    "role": "user",
+                    "content": f"Extract the user's mood (like happy, sad, relaxed, energetic, etc.) and preferred tone (light-hearted, serious, intense) from this text: '{prompt}'. Respond only in JSON with keys 'mood' and 'tone'."
+                }
+            ],
+            temperature=0.7,
+            max_tokens=100
+        )
+        
+        content = response.choices[0].message.content
+        result = json.loads(content)
+        print(f"🎭 Azure OpenAI extracted mood: {result}")
+        return result
+        
+    except Exception as e:
+        print(f"⚠️  Azure OpenAI failed: {e}")
+        print("   Falling back to rule-based extraction")
+        return extract_mood_rule_based(prompt)
+
+def extract_mood_with_openai(prompt: str):
+    """
+    Uses regular OpenAI API to extract mood and tone
+    """
+    try:
+        from openai import OpenAI
+        
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are an assistant that identifies mood and tone from user prompts for a movie recommendation system."},
-                {"role": "user", "content": f"Extract the user's mood (like happy, sad, relaxed, energetic, etc.) and preferred tone (light-hearted, serious, intense) from this text: '{prompt}'. Respond only in JSON with keys 'mood' and 'tone'."}
+                {
+                    "role": "system",
+                    "content": "You are an assistant that identifies mood and tone from user prompts for a movie recommendation system."
+                },
+                {
+                    "role": "user",
+                    "content": f"Extract the user's mood (like happy, sad, relaxed, energetic, etc.) and preferred tone (light-hearted, serious, intense) from this text: '{prompt}'. Respond only in JSON with keys 'mood' and 'tone'."
+                }
             ],
+            temperature=0.7,
+            max_tokens=100
         )
+        
         content = response.choices[0].message.content
-        import json
         result = json.loads(content)
+        print(f"🎭 OpenAI extracted mood: {result}")
         return result
+        
     except Exception as e:
-        print("⚠️ GPT failed, switching to fallback rule-based mood extraction.")
+        print(f"⚠️  OpenAI API failed: {e}")
+        print("   Falling back to rule-based extraction")
         return extract_mood_rule_based(prompt)
 
 
@@ -47,15 +116,17 @@ def extract_mood_rule_based(prompt: str):
 
 def extract_mood(prompt: str):
     """
-    Extract mood from user prompt. Automatically uses GPT if API key is available,
-    otherwise falls back to rule-based extraction.
+    Extract mood from user prompt using the best available method.
+    
+    Priority:
+    1. Azure OpenAI (if configured)
+    2. Regular OpenAI API (if configured)
+    3. Rule-based fallback (always works)
     """
-    if USE_GPT:
-        try:
-            return extract_mood_with_gpt(prompt)
-        except Exception as e:
-            print(f"⚠️ GPT extraction failed: {e}. Using rule-based fallback.")
-            return extract_mood_rule_based(prompt)
+    if USE_MODE == "azure_openai":
+        return extract_mood_with_azure_openai(prompt)
+    elif USE_MODE == "openai":
+        return extract_mood_with_openai(prompt)
     else:
-        # No API key available, use rule-based
+        # Rule-based - always works
         return extract_mood_rule_based(prompt)

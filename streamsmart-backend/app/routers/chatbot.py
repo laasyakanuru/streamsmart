@@ -4,6 +4,7 @@ from typing import Optional, List
 from app.recommender import get_recommendations
 from app.recommender.user_profile import add_to_history, get_user_history
 from app.recommender.conversation_memory import add_conversation, get_user_conversations
+from app.recommender.mood_extractor import get_active_mode
 
 router = APIRouter(prefix="/api", tags=["chatbot"])
 
@@ -77,3 +78,27 @@ def get_history(user_id: str):
         return {"user_id": user_id, "history": history}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error fetching history: {str(e)}")
+
+@router.get("/status")
+def get_system_status():
+    """
+    Get current system configuration and active services
+    """
+    mood_mode = get_active_mode()
+    
+    mode_descriptions = {
+        "azure_openai": "Azure OpenAI GPT (Best - Enterprise grade)",
+        "openai": "OpenAI API GPT (Good - Cloud-based)",
+        "rule_based": "Rule-based (Works offline - No API needed)"
+    }
+    
+    return {
+        "mood_extraction": {
+            "active_mode": mood_mode,
+            "description": mode_descriptions.get(mood_mode, "Unknown"),
+            "is_ai_powered": mood_mode in ["azure_openai", "openai"]
+        },
+        "recommendation_engine": "Active",
+        "analytics": "Active",
+        "feedback_system": "Active"
+    }
