@@ -48,18 +48,28 @@ def extract_mood_with_azure_openai(prompt: str):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are an assistant that identifies mood and tone from user prompts for a movie recommendation system."
+                    "content": "You are a JSON-only assistant. Extract mood and tone from text. ONLY return valid JSON, no markdown, no explanation."
                 },
                 {
                     "role": "user",
-                    "content": f"Extract the user's mood (like happy, sad, relaxed, energetic, etc.) and preferred tone (light-hearted, serious, intense) from this text: '{prompt}'. Respond only in JSON with keys 'mood' and 'tone'."
+                    "content": f"Extract mood (happy/sad/calm/energetic/neutral) and tone (light/intense/neutral) from: '{prompt}'. Return ONLY this exact JSON format: {{\"mood\": \"value\", \"tone\": \"value\"}}"
                 }
             ],
-            temperature=0.7,
-            max_tokens=100
+            temperature=0.3,
+            max_tokens=50
         )
         
         content = response.choices[0].message.content
+        print(f"📄 Raw response: {content}")
+        
+        # Strip markdown code blocks if present
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+        
+        # Parse JSON
+        content = content.strip()
         result = json.loads(content)
         print(f"🎭 Azure OpenAI extracted mood: {result}")
         return result
