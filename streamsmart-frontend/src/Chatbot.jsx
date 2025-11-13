@@ -30,7 +30,7 @@ function Chatbot({ onClose }) {
     setIsLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+      const apiUrl = import.meta.env.VITE_API_URL || "https://streamsmart-backend-2091.azurewebsites.net";
       const res = await axios.post(`${apiUrl}/api/chat`, {
         user_id: userId,
         message: inputMessage,
