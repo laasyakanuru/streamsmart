@@ -1,11 +1,12 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.routers import chatbot, analytics, feedback
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
+# Load environment variables FIRST (before any other imports)
 load_dotenv()
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.routers import chatbot, analytics, feedback
 
 app = FastAPI(
     title="StreamSmart API",
