@@ -1,13 +1,13 @@
-StreamSmart Deployment - Thu Nov 13 10:00:08 IST 2025
+StreamSmart Deployment - Thu Nov 13 19:39:59 IST 2025
 ================================
 
-Frontend: https://streamsmart-frontend-7272.azurewebsites.net
-Backend:  https://streamsmart-backend-7272.azurewebsites.net
-API Docs: https://streamsmart-backend-7272.azurewebsites.net/docs
+Frontend: https://streamsmart-frontend-2091.azurewebsites.net
+Backend:  https://streamsmart-backend-2091.azurewebsites.net
+API Docs: https://streamsmart-backend-2091.azurewebsites.net/docs
 
 Resource Names:
-- Backend App: streamsmart-backend-7272
-- Frontend App: streamsmart-frontend-7272
-- ACR: streamsmartacr7272
+- Backend App: streamsmart-backend-2091
+- Frontend App: streamsmart-frontend-2091
+- ACR: streamsmartacr2091
 - Plan: streamsmart-plan
 - Resource Group: hackathon-azure-rg193
