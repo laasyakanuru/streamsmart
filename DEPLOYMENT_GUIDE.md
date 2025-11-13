@@ -105,7 +105,7 @@ az webapp log tail --name streamsmart-backend-XXXXX --resource-group hackathon-a
 **Solution:** The script auto-configures CORS. If still failing, manually update:
 ```bash
 BACKEND_APP="streamsmart-backend-XXXXX"
-FRONTEND_URL="https://streamsmart-frontend-XXXXX.azurewebsites.net"
+FRONTEND_URL="https://streamsmart-frontend-2091.azurewebsites.net/"
 
 az webapp config appsettings set \
   --name $BACKEND_APP \

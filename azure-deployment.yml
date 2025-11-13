@@ -30,7 +30,7 @@ spec:
               name: streamsmart-secrets
               key: openai-api-key
         - name: FRONTEND_URL
-          value: "https://<your-frontend-url>.azurewebsites.net"
+          value: "https://https://streamsmart-frontend-2091.azurewebsites.net/"
         resources:
           requests:
             cpu: "500m"

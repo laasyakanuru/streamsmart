@@ -30,12 +30,22 @@ function Chatbot({ onClose }) {
     setIsLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "https://streamsmart-backend-2091.azurewebsites.net";
+    //   const apiUrl = import.meta.env.VITE_API_URL || "https://streamsmart-backend-2091.azurewebsites.net";
+    if (!import.meta.env.VITE_API_URL) 
+        {
+        throw new Error("VITE_API_URL is not defined!");
+        }
+    const apiUrl = import.meta.env.VITE_API_URL;
+
       const res = await axios.post(`${apiUrl}/api/chat`, {
         user_id: userId,
         message: inputMessage,
-        top_n: 5
-      });
+        top_n: 5},
+       {
+        headers: {
+        "Content-Type": "application/json"
+        }
+  });
 
       const botMessage = {
         type: "bot",
@@ -145,3 +155,4 @@ function Chatbot({ onClose }) {
 }
 
 export default Chatbot;
+console.log("API URL at runtime:", import.meta.env.VITE_API_URL);

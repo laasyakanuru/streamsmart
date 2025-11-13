@@ -10,7 +10,7 @@ services:
       - "8000:8000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - FRONTEND_URL=http://localhost
+      - FRONTEND_URL=https://streamsmart-frontend-2091.azurewebsites.net/
     volumes:
       - ./streamsmart-backend/data:/app/data
     healthcheck:
@@ -33,7 +33,7 @@ services:
     depends_on:
       - backend
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=https://streamsmart-backend-2091.azurewebsites.net/
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
       interval: 30s
