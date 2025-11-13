@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "neutral",
+    "tone": "neutral"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 94",
+      "genre": "Romance",
+      "release_year": 1987,
+      "rating": 9.2,
+      "tags": "futuristic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 33",
+      "genre": "Romance",
+      "release_year": 2017,
+      "rating": 2.9,
+      "tags": "epic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 78",
+      "genre": "Romance",
+      "release_year": 1990,
+      "rating": 1.6,
+      "tags": "mystery",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 113",
+      "genre": "Romance",
+      "release_year": 2013,
+      "rating": 5.1,
+      "tags": "futuristic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 169",
+      "genre": "Romance",
+      "release_year": 1994,
+      "rating": 4.9,
+      "tags": "mystery",
+      "hybrid_score": 0.4
+    }
+  ],
+  "query": "I want romance movies",
+  "query_key": "romance"
+}

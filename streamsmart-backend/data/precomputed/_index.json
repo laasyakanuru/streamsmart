@@ -1,0 +1,122 @@
+[
+  {
+    "key": "happy_comedy",
+    "message": "I want something funny and light",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "happy_general",
+    "message": "I'm feeling happy and want something entertaining",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "sad_uplifting",
+    "message": "I'm sad and need something uplifting",
+    "mood": "happy",
+    "recommendations": 5
+  },
+  {
+    "key": "sad_drama",
+    "message": "I'm feeling sad and want a good drama",
+    "mood": "happy",
+    "recommendations": 5
+  },
+  {
+    "key": "energetic_action",
+    "message": "I want exciting action movies",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "energetic_thriller",
+    "message": "I'm feeling energetic and want something thrilling",
+    "mood": "energetic",
+    "recommendations": 5
+  },
+  {
+    "key": "calm_relaxing",
+    "message": "I want something calm and relaxing",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "calm_romance",
+    "message": "I'm feeling calm and want a nice romance",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "action",
+    "message": "I want action movies",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "comedy",
+    "message": "I want comedy movies",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "drama",
+    "message": "I want drama movies",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "thriller",
+    "message": "I want thriller movies",
+    "mood": "energetic",
+    "recommendations": 5
+  },
+  {
+    "key": "romance",
+    "message": "I want romance movies",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "horror",
+    "message": "I want horror movies",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "friends_night",
+    "message": "Something good for a movie night with friends",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "date_night",
+    "message": "Something for a date night",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "alone",
+    "message": "Something I can watch alone",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "weekend",
+    "message": "Something for the weekend",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "tonight",
+    "message": "Something for tonight",
+    "mood": "neutral",
+    "recommendations": 5
+  },
+  {
+    "key": "late_night",
+    "message": "Late night movie",
+    "mood": "neutral",
+    "recommendations": 5
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "neutral",
+    "tone": "neutral"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 119",
+      "genre": "Horror",
+      "release_year": 2001,
+      "rating": 3.7,
+      "tags": "satire",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 184",
+      "genre": "Horror",
+      "release_year": 1988,
+      "rating": 5.0,
+      "tags": "dark humor",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 138",
+      "genre": "Horror",
+      "release_year": 1989,
+      "rating": 4.6,
+      "tags": "mystery",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 136",
+      "genre": "Horror",
+      "release_year": 2022,
+      "rating": 3.4,
+      "tags": "family",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 44",
+      "genre": "Horror",
+      "release_year": 2021,
+      "rating": 6.1,
+      "tags": "romantic",
+      "hybrid_score": 0.4
+    }
+  ],
+  "query": "I want horror movies",
+  "query_key": "horror"
+}

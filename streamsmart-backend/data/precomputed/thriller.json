@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "energetic",
+    "tone": "intense"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 43",
+      "genre": "Thriller",
+      "release_year": 2022,
+      "rating": 2.9,
+      "tags": "futuristic",
+      "hybrid_score": 1.1
+    },
+    {
+      "title": "Movie 1",
+      "genre": "Thriller",
+      "release_year": 1995,
+      "rating": 5.5,
+      "tags": "epic",
+      "hybrid_score": 0.6000000000000001
+    },
+    {
+      "title": "Movie 130",
+      "genre": "Thriller",
+      "release_year": 1981,
+      "rating": 7.4,
+      "tags": "mystery",
+      "hybrid_score": 0.6000000000000001
+    },
+    {
+      "title": "Movie 35",
+      "genre": "Thriller",
+      "release_year": 2014,
+      "rating": 2.1,
+      "tags": "epic",
+      "hybrid_score": 0.6000000000000001
+    },
+    {
+      "title": "Movie 40",
+      "genre": "Thriller",
+      "release_year": 1986,
+      "rating": 5.0,
+      "tags": "satire",
+      "hybrid_score": 0.6000000000000001
+    }
+  ],
+  "query": "I want thriller movies",
+  "query_key": "thriller"
+}

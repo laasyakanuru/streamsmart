@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "neutral",
+    "tone": "neutral"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 139",
+      "genre": "Comedy",
+      "release_year": 2019,
+      "rating": 9.7,
+      "tags": "mystery",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 104",
+      "genre": "Comedy",
+      "release_year": 2015,
+      "rating": 3.1,
+      "tags": "satire",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 29",
+      "genre": "Comedy",
+      "release_year": 1990,
+      "rating": 2.0,
+      "tags": "futuristic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 158",
+      "genre": "Comedy",
+      "release_year": 2016,
+      "rating": 1.6,
+      "tags": "mystery",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 157",
+      "genre": "Comedy",
+      "release_year": 2010,
+      "rating": 6.3,
+      "tags": "dark humor",
+      "hybrid_score": 0.4
+    }
+  ],
+  "query": "I want comedy movies",
+  "query_key": "comedy"
+}

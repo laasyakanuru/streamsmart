@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "neutral",
+    "tone": "neutral"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 116",
+      "genre": "Action",
+      "release_year": 1988,
+      "rating": 9.6,
+      "tags": "romantic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 150",
+      "genre": "Action",
+      "release_year": 2016,
+      "rating": 9.8,
+      "tags": "adventure",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 165",
+      "genre": "Action",
+      "release_year": 1998,
+      "rating": 5.8,
+      "tags": "satire",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 66",
+      "genre": "Action",
+      "release_year": 1999,
+      "rating": 1.3,
+      "tags": "epic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 117",
+      "genre": "Action",
+      "release_year": 2007,
+      "rating": 7.7,
+      "tags": "adventure",
+      "hybrid_score": 0.4
+    }
+  ],
+  "query": "I want exciting action movies",
+  "query_key": "energetic_action"
+}

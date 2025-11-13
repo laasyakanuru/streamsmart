@@ -1,13 +1,13 @@
 """
-ML-Optimized Recommender for Azure B1
-======================================
+ML-Optimized Recommender for Azure B1 - EAGER LOADING
+======================================================
 Keeps ML model but extremely optimized for Azure constraints
 
 Strategy:
-1. Lazy loading - Nothing loads at import time
+1. EAGER loading - Load everything at startup (5-8s one-time cost)
 2. Minimal ML model (5 trees, max_depth=5)  
-3. Simple similarity (no TF-IDF at startup)
-4. Fast startup (< 3 seconds on first request)
+3. Pre-built keyword index at startup
+4. First request is FAST (< 3 seconds)
 5. Low memory (< 400MB total)
 
 ML Model: YES ✅
@@ -17,35 +17,32 @@ Performance: Azure B1 compatible ✅
 import pandas as pd
 import os
 import numpy as np
+import json
 
-# CRITICAL: Don't import sklearn at module level!
-# Import only when needed to avoid slow startup
+# Import joblib at module level for eager loading
+import joblib
 
-# Global cache for lazy loading
-_DATA_LOADED = False
+print("🚀 Starting eager loading (at startup)...")
+
+# Global variables - will be populated at module import
 _movies_df = None
 _users_df = None
 _ml_model = None
 _encoders = None
 _word_index = None
+_DATA_LOADED = False
 
-def _lazy_init():
+# EAGER LOADING - Execute at module import time
+def _eager_init():
     """
-    Lazy initialization - called on first request only
-    This keeps startup time near zero
+    Eager initialization - runs at module import (startup)
+    One-time cost of 5-8s, but makes all requests fast
     """
     global _DATA_LOADED, _movies_df, _users_df, _ml_model, _encoders, _word_index
     
-    if _DATA_LOADED:
-        return  # Already initialized
-    
-    print("🚀 Lazy loading recommender (first request)...")
-    from app.recommender.mood_extractor import extract_mood
-    from app.recommender.user_profile import get_user_history
-    
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     
-    # 1. Load movie data (fast)
+    # 1. Load movie data
     print("📊 Loading datasets...")
     movies_path = os.path.join(base_dir, "data", "movies_metadata.csv")
     users_path = os.path.join(base_dir, "data", "users.csv")
@@ -54,7 +51,7 @@ def _lazy_init():
     _users_df = pd.read_csv(users_path)
     print(f"✅ Loaded {len(_movies_df)} movies")
     
-    # 2. Build simple word index (lightweight)
+    # 2. Build keyword index
     print("🔧 Building keyword index...")
     _movies_df['keywords'] = (
         _movies_df['title'].fillna('').str.lower() + ' ' +
@@ -72,13 +69,12 @@ def _lazy_init():
     
     print(f"✅ Indexed {len(_word_index)} keywords")
     
-    # 3. Load TINY ML model (only if exists)
+    # 3. Load ML model
     model_path = os.path.join(base_dir, "data", "tiny_ml_model.pkl")
     
     if os.path.exists(model_path):
-        print("🤖 Loading tiny ML model...")
+        print("🤖 Loading ML model...")
         try:
-            import joblib
             _ml_model = joblib.load(model_path)
             _encoders = {
                 'mood': joblib.load(os.path.join(base_dir, "data", "le_mood.pkl")),
@@ -90,12 +86,96 @@ def _lazy_init():
         except Exception as e:
             print(f"⚠️  ML model load failed: {e}")
             _ml_model = None
+            _encoders = None
     else:
-        print("⚠️  No ML model found, will train minimal one...")
-        _ml_model = _train_minimal_ml_model(base_dir)
+        print("⚠️  No ML model found")
+        _ml_model = None
+        _encoders = None
     
     _DATA_LOADED = True
-    print("✅ Initialization complete!")
+    print("✅ Eager loading complete! Recommender ready!")
+
+# Execute eager loading NOW (at import time)
+try:
+    _eager_init()
+except Exception as e:
+    print(f"❌ Eager loading failed: {e}")
+    import traceback
+    traceback.print_exc()
+
+# ------------------------------
+# PRE-COMPUTED RECOMMENDATIONS
+# ------------------------------
+
+# Directory containing pre-computed results
+PRECOMPUTED_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+    "data",
+    "precomputed"
+)
+
+def _load_precomputed_index():
+    """Load index of pre-computed queries"""
+    try:
+        index_path = os.path.join(PRECOMPUTED_DIR, "_index.json")
+        if os.path.exists(index_path):
+            with open(index_path, 'r') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"⚠️  Could not load pre-computed index: {e}")
+    return []
+
+# Load index at startup
+PRECOMPUTED_INDEX = _load_precomputed_index()
+if PRECOMPUTED_INDEX:
+    print(f"✅ Loaded {len(PRECOMPUTED_INDEX)} pre-computed queries")
+
+def _find_precomputed(user_prompt):
+    """Check if we have pre-computed results for this query"""
+    if not PRECOMPUTED_INDEX:
+        return None
+    
+    # Simple keyword matching
+    prompt_lower = user_prompt.lower()
+    
+    # Check exact matches first
+    for item in PRECOMPUTED_INDEX:
+        if item['message'].lower() == prompt_lower:
+            return item['key']
+    
+    # Check keyword matches
+    keywords_map = {
+        'action': ['action', 'exciting', 'energetic', 'thrilling'],
+        'comedy': ['funny', 'comedy', 'laugh', 'light', 'entertaining'],
+        'drama': ['drama', 'emotional'],
+        'thriller': ['thriller', 'suspense'],
+        'romance': ['romance', 'romantic', 'love', 'date'],
+        'horror': ['horror', 'scary', 'frightening'],
+        'happy_comedy': ['happy', 'funny'],
+        'sad_uplifting': ['sad', 'uplifting'],
+        'calm_relaxing': ['calm', 'relaxing'],
+        'energetic_action': ['energetic', 'action'],
+    }
+    
+    for key, words in keywords_map.items():
+        if any(word in prompt_lower for word in words):
+            # Find matching pre-computed
+            for item in PRECOMPUTED_INDEX:
+                if key in item['key']:
+                    return item['key']
+    
+    return None
+
+def _load_precomputed_result(key):
+    """Load pre-computed recommendation"""
+    try:
+        filepath = os.path.join(PRECOMPUTED_DIR, f"{key}.json")
+        if os.path.exists(filepath):
+            with open(filepath, 'r') as f:
+                return json.load(f)
+    except Exception as e:
+        print(f"⚠️  Could not load pre-computed {key}: {e}")
+    return None
 
 def _train_minimal_ml_model(base_dir):
     """
@@ -165,20 +245,32 @@ def get_recommendations(user_id, user_prompt, top_n=5):
     Get ML-powered recommendations (optimized for Azure B1)
     
     Flow:
-    1. Lazy init on first request
-    2. Extract mood (Azure OpenAI)
-    3. Keyword matching (fast)
-    4. ML prediction (tiny model)
-    5. Combine scores
+    1. Check pre-computed cache first (INSTANT - <0.5s)
+    2. If not cached, compute in real-time:
+       - Extract mood (Azure OpenAI)
+       - Keyword matching
+       - ML prediction
+       - Combine scores
     """
     try:
-        # Lazy initialization
-        _lazy_init()
+        # Check pre-computed first (FAST!)
+        precomputed_key = _find_precomputed(user_prompt)
+        if precomputed_key:
+            result = _load_precomputed_result(precomputed_key)
+            if result:
+                print(f"⚡ Using pre-computed: {precomputed_key}")
+                # Update user_id and return
+                result['user_id'] = user_id
+                return result
+        
+        # Not pre-computed, compute in real-time
+        print(f"🔧 Computing real-time for: {user_prompt[:50]}...")
+        
+        # Data already loaded! No initialization needed
+        global _movies_df, _users_df, _ml_model, _encoders, _word_index
         
         from app.recommender.mood_extractor import extract_mood
         from app.recommender.user_profile import get_user_history
-        
-        global _movies_df, _users_df, _ml_model, _encoders, _word_index
         
         # Extract mood
         mood_info = extract_mood(user_prompt)

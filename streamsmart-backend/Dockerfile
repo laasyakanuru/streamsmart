@@ -21,6 +21,8 @@ RUN uv pip install --system --no-cache -e .
 # Copy application code
 COPY ./app ./app
 COPY ./data ./data
+# Copy pre-computed recommendations
+COPY ./data/precomputed ./data/precomputed
 
 # Expose port
 EXPOSE 8000

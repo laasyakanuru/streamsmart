@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "neutral",
+    "tone": "neutral"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 200",
+      "genre": "Fantasy",
+      "release_year": 1999,
+      "rating": 4.4,
+      "tags": "mystery",
+      "hybrid_score": 0.0
+    },
+    {
+      "title": "Movie 63",
+      "genre": "Action",
+      "release_year": 1990,
+      "rating": 8.2,
+      "tags": "dark humor",
+      "hybrid_score": 0.0
+    },
+    {
+      "title": "Movie 73",
+      "genre": "Action",
+      "release_year": 2003,
+      "rating": 2.8,
+      "tags": "mystery",
+      "hybrid_score": 0.0
+    },
+    {
+      "title": "Movie 72",
+      "genre": "Thriller",
+      "release_year": 2022,
+      "rating": 2.5,
+      "tags": "adventure",
+      "hybrid_score": 0.0
+    },
+    {
+      "title": "Movie 71",
+      "genre": "Thriller",
+      "release_year": 1997,
+      "rating": 1.2,
+      "tags": "romantic",
+      "hybrid_score": 0.0
+    }
+  ],
+  "query": "I want something funny and light",
+  "query_key": "happy_comedy"
+}

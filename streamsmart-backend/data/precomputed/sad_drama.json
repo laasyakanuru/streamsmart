@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "happy",
+    "tone": "light-hearted"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 157",
+      "genre": "Comedy",
+      "release_year": 2010,
+      "rating": 6.3,
+      "tags": "dark humor",
+      "hybrid_score": 0.7
+    },
+    {
+      "title": "Movie 163",
+      "genre": "Drama",
+      "release_year": 1994,
+      "rating": 3.0,
+      "tags": "romantic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 148",
+      "genre": "Drama",
+      "release_year": 2008,
+      "rating": 2.5,
+      "tags": "epic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 107",
+      "genre": "Drama",
+      "release_year": 1992,
+      "rating": 8.2,
+      "tags": "futuristic",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 170",
+      "genre": "Drama",
+      "release_year": 1997,
+      "rating": 3.5,
+      "tags": "romantic",
+      "hybrid_score": 0.4
+    }
+  ],
+  "query": "I'm feeling sad and want a good drama",
+  "query_key": "sad_drama"
+}

@@ -1,0 +1,52 @@
+{
+  "user_id": "precompute",
+  "extracted_mood": {
+    "mood": "neutral",
+    "tone": "neutral"
+  },
+  "user_profile": [],
+  "recommendations": [
+    {
+      "title": "Movie 45",
+      "genre": "Drama",
+      "release_year": 2002,
+      "rating": 2.6,
+      "tags": "mystery",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 152",
+      "genre": "Drama",
+      "release_year": 2023,
+      "rating": 5.5,
+      "tags": "dark humor",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 173",
+      "genre": "Drama",
+      "release_year": 1999,
+      "rating": 3.4,
+      "tags": "family",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 171",
+      "genre": "Drama",
+      "release_year": 2005,
+      "rating": 1.6,
+      "tags": "satire",
+      "hybrid_score": 0.4
+    },
+    {
+      "title": "Movie 170",
+      "genre": "Drama",
+      "release_year": 1997,
+      "rating": 3.5,
+      "tags": "romantic",
+      "hybrid_score": 0.4
+    }
+  ],
+  "query": "I want drama movies",
+  "query_key": "drama"
+}
