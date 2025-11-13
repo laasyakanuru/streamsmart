@@ -1,204 +1,249 @@
 """
-Optimized Recommender for Azure Deployment
-===========================================
-Changes from original:
-1. Removed sentence-transformers (too heavy, ~500MB, slow)
-2. Using TF-IDF for similarity (lightweight, fast)
-3. Simplified Random Forest (10 trees vs 100)
-4. Added error handling and fallbacks
-5. ZERO training in production (only loads cached models)
+ML-Optimized Recommender for Azure B1
+======================================
+Keeps ML model but extremely optimized for Azure constraints
 
-Performance:
-- Original: 30+ seconds per request
-- Optimized: 1-3 seconds per request
-- Memory: ~400MB (vs ~1.5GB)
+Strategy:
+1. Lazy loading - Nothing loads at import time
+2. Minimal ML model (5 trees, max_depth=5)  
+3. Simple similarity (no TF-IDF at startup)
+4. Fast startup (< 3 seconds on first request)
+5. Low memory (< 400MB total)
+
+ML Model: YES ✅
+Performance: Azure B1 compatible ✅
 """
 
 import pandas as pd
 import os
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import joblib
-from app.recommender.mood_extractor import extract_mood
-from app.recommender.user_profile import get_user_history
 
-# -----------------------------
-# Load datasets
-# -----------------------------
-base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-movies_path = os.path.join(base_dir, "data", "movies_metadata.csv")
-moods_path = os.path.join(base_dir, "data", "mood_recommendations.csv")
-users_path = os.path.join(base_dir, "data", "users.csv")
+# CRITICAL: Don't import sklearn at module level!
+# Import only when needed to avoid slow startup
 
-print("📊 Loading datasets...")
-movies_df = pd.read_csv(movies_path)
-moods_df = pd.read_csv(moods_path)
-users_df = pd.read_csv(users_path)
-print(f"✅ Loaded {len(movies_df)} movies")
+# Global cache for lazy loading
+_DATA_LOADED = False
+_movies_df = None
+_users_df = None
+_ml_model = None
+_encoders = None
+_word_index = None
 
-# -----------------------------
-# Load or Train RandomForest model (LIGHTWEIGHT)
-# -----------------------------
-model_path = os.path.join(base_dir, "data", "rf_recommender_optimized.pkl")
-le_mood_path = os.path.join(base_dir, "data", "le_mood.pkl")
-le_context_path = os.path.join(base_dir, "data", "le_context.pkl")
-le_time_path = os.path.join(base_dir, "data", "le_time.pkl")
-le_movie_path = os.path.join(base_dir, "data", "le_movie.pkl")
-
-if os.path.exists(model_path) and os.path.exists(le_mood_path):
-    # Load existing model and encoders
-    print("✅ Loading optimized Random Forest model...")
-    rf_model = joblib.load(model_path)
-    le_mood = joblib.load(le_mood_path)
-    le_context = joblib.load(le_context_path)
-    le_time = joblib.load(le_time_path)
-    le_movie = joblib.load(le_movie_path)
-    print("✅ Model loaded successfully!")
-else:
-    # Train new model (ONLY on first local run, never in Azure)
-    print("🔧 Training optimized Random Forest model (first time)...")
-    le_mood = LabelEncoder()
-    le_context = LabelEncoder()
-    le_time = LabelEncoder()
-    le_movie = LabelEncoder()
-    
-    moods_df["mood_enc"] = le_mood.fit_transform(moods_df["mood"])
-    moods_df["context_enc"] = le_context.fit_transform(moods_df["context"])
-    moods_df["time_enc"] = le_time.fit_transform(moods_df["time_of_day"])
-    moods_df["movie_enc"] = le_movie.fit_transform(moods_df["recommended_movie_id"])
-    
-    X = moods_df[["mood_enc", "context_enc", "time_enc"]]
-    y = moods_df["movie_enc"]
-    
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    # OPTIMIZED: 10 trees (vs 100), max_depth=10, min_samples_split=10
-    rf_model = RandomForestClassifier(
-        n_estimators=10,
-        max_depth=10,
-        min_samples_split=10,
-        random_state=42,
-        n_jobs=1  # Single thread for Azure
-    )
-    rf_model.fit(X_train, y_train)
-    
-    # Save model and encoders for reuse
-    joblib.dump(rf_model, model_path)
-    joblib.dump(le_mood, le_mood_path)
-    joblib.dump(le_context, le_context_path)
-    joblib.dump(le_time, le_time_path)
-    joblib.dump(le_movie, le_movie_path)
-    
-    accuracy = rf_model.score(X_test, y_test)
-    print(f"✅ Optimized model trained! Test Accuracy: {accuracy:.2%}")
-
-# -----------------------------
-# TF-IDF Similarity (LIGHTWEIGHT - replaces sentence-transformers)
-# -----------------------------
-print("🔧 Building TF-IDF vectorizer...")
-# Combine title, genre, and tags for better matching
-movies_df['text_features'] = (
-    movies_df['title'].fillna('') + ' ' + 
-    movies_df['genre'].fillna('') + ' ' + 
-    movies_df['tags'].fillna('')
-)
-
-# TF-IDF with limited features (fast and lightweight)
-tfidf_vectorizer = TfidfVectorizer(
-    max_features=100,  # Only top 100 words
-    stop_words='english',
-    lowercase=True,
-    ngram_range=(1, 2)  # Unigrams and bigrams
-)
-
-tfidf_matrix = tfidf_vectorizer.fit_transform(movies_df['text_features'])
-print(f"✅ TF-IDF ready ({tfidf_matrix.shape[0]} movies, {tfidf_matrix.shape[1]} features)")
-
-# -----------------------------
-# Optimized Hybrid Recommendation Function
-# -----------------------------
-def get_recommendations(user_id, user_prompt, top_n=5, mood_weight=0.4, history_weight=0.3, ml_weight=0.3):
+def _lazy_init():
     """
-    Optimized for Azure: Fast, lightweight, production-ready
+    Lazy initialization - called on first request only
+    This keeps startup time near zero
+    """
+    global _DATA_LOADED, _movies_df, _users_df, _ml_model, _encoders, _word_index
     
-    Args:
-        user_id: User identifier
-        user_prompt: Natural language prompt
-        top_n: Number of recommendations
-        mood_weight: Weight for semantic similarity (0-1)
-        history_weight: Weight for user history (0-1)
-        ml_weight: Weight for ML prediction (0-1)
+    if _DATA_LOADED:
+        return  # Already initialized
     
-    Returns:
-        Dictionary with recommendations and metadata
+    print("🚀 Lazy loading recommender (first request)...")
+    from app.recommender.mood_extractor import extract_mood
+    from app.recommender.user_profile import get_user_history
+    
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    
+    # 1. Load movie data (fast)
+    print("📊 Loading datasets...")
+    movies_path = os.path.join(base_dir, "data", "movies_metadata.csv")
+    users_path = os.path.join(base_dir, "data", "users.csv")
+    
+    _movies_df = pd.read_csv(movies_path)
+    _users_df = pd.read_csv(users_path)
+    print(f"✅ Loaded {len(_movies_df)} movies")
+    
+    # 2. Build simple word index (lightweight)
+    print("🔧 Building keyword index...")
+    _movies_df['keywords'] = (
+        _movies_df['title'].fillna('').str.lower() + ' ' +
+        _movies_df['genre'].fillna('').str.lower() + ' ' +
+        _movies_df['tags'].fillna('').str.lower()
+    ).str.split()
+    
+    # Create word-to-movies index (fast lookup)
+    _word_index = {}
+    for idx, keywords in enumerate(_movies_df['keywords']):
+        for word in keywords:
+            if word not in _word_index:
+                _word_index[word] = []
+            _word_index[word].append(idx)
+    
+    print(f"✅ Indexed {len(_word_index)} keywords")
+    
+    # 3. Load TINY ML model (only if exists)
+    model_path = os.path.join(base_dir, "data", "tiny_ml_model.pkl")
+    
+    if os.path.exists(model_path):
+        print("🤖 Loading tiny ML model...")
+        try:
+            import joblib
+            _ml_model = joblib.load(model_path)
+            _encoders = {
+                'mood': joblib.load(os.path.join(base_dir, "data", "le_mood.pkl")),
+                'context': joblib.load(os.path.join(base_dir, "data", "le_context.pkl")),
+                'time': joblib.load(os.path.join(base_dir, "data", "le_time.pkl")),
+                'movie': joblib.load(os.path.join(base_dir, "data", "le_movie.pkl"))
+            }
+            print("✅ ML model loaded!")
+        except Exception as e:
+            print(f"⚠️  ML model load failed: {e}")
+            _ml_model = None
+    else:
+        print("⚠️  No ML model found, will train minimal one...")
+        _ml_model = _train_minimal_ml_model(base_dir)
+    
+    _DATA_LOADED = True
+    print("✅ Initialization complete!")
+
+def _train_minimal_ml_model(base_dir):
+    """
+    Train the tiniest possible ML model
+    5 trees, depth 5, minimal features
     """
     try:
-        # Extract mood and tone
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import LabelEncoder
+        import joblib
+        
+        print("🔧 Training minimal ML model...")
+        
+        # Load mood data
+        moods_path = os.path.join(base_dir, "data", "mood_recommendations.csv")
+        moods_df = pd.read_csv(moods_path)
+        
+        # Encode
+        global _encoders
+        _encoders = {
+            'mood': LabelEncoder(),
+            'context': LabelEncoder(),
+            'time': LabelEncoder(),
+            'movie': LabelEncoder()
+        }
+        
+        moods_df["mood_enc"] = _encoders['mood'].fit_transform(moods_df["mood"])
+        moods_df["context_enc"] = _encoders['context'].fit_transform(moods_df["context"])
+        moods_df["time_enc"] = _encoders['time'].fit_transform(moods_df["time_of_day"])
+        moods_df["movie_enc"] = _encoders['movie'].fit_transform(moods_df["recommended_movie_id"])
+        
+        X = moods_df[["mood_enc", "context_enc", "time_enc"]]
+        y = moods_df["movie_enc"]
+        
+        # MINIMAL MODEL: 5 trees, depth 5
+        model = RandomForestClassifier(
+            n_estimators=5,      # Only 5 trees (vs 10 or 100)
+            max_depth=5,         # Shallow trees
+            min_samples_split=20, # Aggressive pruning
+            random_state=42,
+            n_jobs=1
+        )
+        
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        model.fit(X_train, y_train)
+        
+        # Save for reuse
+        model_path = os.path.join(base_dir, "data", "tiny_ml_model.pkl")
+        joblib.dump(model, model_path)
+        joblib.dump(_encoders['mood'], os.path.join(base_dir, "data", "le_mood.pkl"))
+        joblib.dump(_encoders['context'], os.path.join(base_dir, "data", "le_context.pkl"))
+        joblib.dump(_encoders['time'], os.path.join(base_dir, "data", "le_time.pkl"))
+        joblib.dump(_encoders['movie'], os.path.join(base_dir, "data", "le_movie.pkl"))
+        
+        accuracy = model.score(X_test, y_test)
+        print(f"✅ Minimal ML trained! Accuracy: {accuracy:.2%}")
+        
+        return model
+        
+    except Exception as e:
+        print(f"❌ ML training failed: {e}")
+        return None
+
+def get_recommendations(user_id, user_prompt, top_n=5):
+    """
+    Get ML-powered recommendations (optimized for Azure B1)
+    
+    Flow:
+    1. Lazy init on first request
+    2. Extract mood (Azure OpenAI)
+    3. Keyword matching (fast)
+    4. ML prediction (tiny model)
+    5. Combine scores
+    """
+    try:
+        # Lazy initialization
+        _lazy_init()
+        
+        from app.recommender.mood_extractor import extract_mood
+        from app.recommender.user_profile import get_user_history
+        
+        global _movies_df, _users_df, _ml_model, _encoders, _word_index
+        
+        # Extract mood
         mood_info = extract_mood(user_prompt)
         mood = mood_info.get("mood", "neutral").lower()
         tone = mood_info.get("tone", "neutral").lower()
         
-        # Get user profile
-        user_profile = users_df[users_df["user_id"] == user_id].to_dict(orient="records")
-        user_history_titles = get_user_history(user_id)
+        # Get user data
+        user_profile = _users_df[_users_df["user_id"] == user_id].to_dict(orient="records")
+        user_history = get_user_history(user_id)
         
-        # TF-IDF similarity (FAST - no GPU needed)
-        prompt_vec = tfidf_vectorizer.transform([user_prompt])
-        prompt_similarities = cosine_similarity(prompt_vec, tfidf_matrix).flatten()
+        # Initialize scores
+        scores = np.zeros(len(_movies_df))
         
-        temp_df = movies_df.copy()
-        temp_df["prompt_similarity"] = prompt_similarities
+        # 1. KEYWORD MATCHING (very fast)
+        prompt_words = set(user_prompt.lower().split())
+        for word in prompt_words:
+            if word in _word_index:
+                for movie_idx in _word_index[word]:
+                    scores[movie_idx] += 1.0
         
-        # History similarity (simplified and fast)
-        if user_history_titles:
-            watched_indices = movies_df[movies_df["title"].isin(user_history_titles)].index.tolist()
-            if watched_indices:
-                # Average similarity to watched movies
-                history_sim = np.zeros(len(movies_df))
-                for idx in watched_indices:
-                    history_sim += cosine_similarity(tfidf_matrix[idx:idx+1], tfidf_matrix).flatten()
-                history_sim = history_sim / max(len(watched_indices), 1)
-                temp_df["history_similarity"] = history_sim
-            else:
-                temp_df["history_similarity"] = 0.0
-        else:
-            temp_df["history_similarity"] = 0.0
+        # Normalize keyword scores
+        if scores.max() > 0:
+            scores = scores / scores.max() * 0.4  # 40% weight
         
-        # ML prediction (with error handling)
-        try:
-            # Handle unknown moods gracefully
-            if mood in le_mood.classes_:
-                mood_enc = le_mood.transform([mood])[0]
-            else:
-                mood_enc = le_mood.transform(["neutral"])[0]
-            
-            context_enc = le_context.transform(["alone"])[0]  # Default context
-            time_enc = le_time.transform(["evening"])[0]      # Default time
-            
-            ml_pred = rf_model.predict([[mood_enc, context_enc, time_enc]])[0]
-            predicted_movie_id = le_movie.inverse_transform([ml_pred])[0]
-            
-            # Boost movies matching ML prediction
-            temp_df["ml_score"] = temp_df["movie_id"].apply(
-                lambda mid: 1.0 if mid == predicted_movie_id else 0.0
-            )
-        except Exception as ml_error:
-            print(f"⚠️  ML prediction failed: {ml_error}, using fallback")
-            temp_df["ml_score"] = 0.0
+        # 2. USER HISTORY (simple boost)
+        if user_history:
+            history_indices = _movies_df[_movies_df["title"].isin(user_history)].index
+            for idx in history_indices:
+                # Boost this movie and similar genre
+                scores[idx] += 0.2
+                same_genre = _movies_df[_movies_df['genre'] == _movies_df.iloc[idx]['genre']].index
+                scores[same_genre] += 0.1
         
-        # Normalized hybrid score
-        temp_df["hybrid_score"] = (
-            mood_weight * temp_df["prompt_similarity"]
-            + history_weight * temp_df["history_similarity"]
-            + ml_weight * temp_df["ml_score"]
-        )
+        # 3. ML PREDICTION (tiny model - fast!)
+        if _ml_model is not None and _encoders is not None:
+            try:
+                # Encode mood
+                if mood in _encoders['mood'].classes_:
+                    mood_enc = _encoders['mood'].transform([mood])[0]
+                else:
+                    mood_enc = _encoders['mood'].transform(["neutral"])[0]
+                
+                context_enc = _encoders['context'].transform(["alone"])[0]
+                time_enc = _encoders['time'].transform(["evening"])[0]
+                
+                # ML prediction
+                ml_pred = _ml_model.predict([[mood_enc, context_enc, time_enc]])[0]
+                predicted_movie_id = _encoders['movie'].inverse_transform([ml_pred])[0]
+                
+                # Boost predicted movie and same genre
+                predicted_idx = _movies_df[_movies_df['movie_id'] == predicted_movie_id].index
+                if len(predicted_idx) > 0:
+                    scores[predicted_idx[0]] += 0.5  # Big ML boost
+                    # Boost same genre
+                    pred_genre = _movies_df.iloc[predicted_idx[0]]['genre']
+                    same_genre = _movies_df[_movies_df['genre'] == pred_genre].index
+                    scores[same_genre] += 0.2
+                
+            except Exception as ml_error:
+                print(f"⚠️  ML prediction failed: {ml_error}")
         
-        # Sort and return top recommendations
-        results = temp_df.sort_values(by="hybrid_score", ascending=False).head(top_n)
+        # Get top N
+        top_indices = np.argsort(scores)[::-1][:top_n]
+        results = _movies_df.iloc[top_indices].copy()
+        results['hybrid_score'] = scores[top_indices]
         
         return {
             "user_id": user_id,
@@ -210,20 +255,23 @@ def get_recommendations(user_id, user_prompt, top_n=5, mood_weight=0.4, history_
         }
     
     except Exception as e:
-        print(f"❌ Recommendation error: {e}")
+        print(f"❌ Error in recommendations: {e}")
         import traceback
         traceback.print_exc()
         
-        # Fallback: Return top-rated movies
-        fallback_results = movies_df.nlargest(top_n, 'rating')
+        # Fallback: top-rated movies
+        _lazy_init()
+        fallback = _movies_df.nlargest(top_n, 'rating')
         return {
             "user_id": user_id,
             "extracted_mood": {"mood": "neutral", "tone": "neutral"},
             "user_profile": [],
-            "recommendations": fallback_results[
+            "recommendations": fallback[
                 ["title", "genre", "release_year", "rating", "tags"]
             ].assign(hybrid_score=0.5).to_dict(orient="records")
         }
 
-print("🚀 Optimized recommender ready!")
+# NO initialization at import time!
+# Everything happens on first request
+print("🚀 ML-optimized recommender ready (lazy loading, 5-tree model)")
 
