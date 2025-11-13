@@ -31,7 +31,9 @@ function App() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/chat", {
+      // Use environment variable or fallback to production URL
+      const apiUrl = import.meta.env.VITE_API_URL || "https://streamsmart-backend-7272.azurewebsites.net";
+      const res = await axios.post(`${apiUrl}/api/chat`, {
         user_id: userId,
         message: inputMessage,
         top_n: 5
